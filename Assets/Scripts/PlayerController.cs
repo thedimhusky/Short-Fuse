@@ -43,6 +43,8 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+
+        currentBombs = maxBombs;
     }
 
     private void OnEnable()
@@ -142,15 +144,39 @@ public class PlayerController : MonoBehaviour
     // BOMBS
     private void OnBomb(InputAction.CallbackContext context)
     {
-        PlaceBomb();
+        Instantiate(
+            bombPrefab,
+            bombSpawnPoint.position,
+            Quaternion.identity
+        );
+
+        currentBombs--;
+
+        Debug.Log("Bombs remaining: " + currentBombs);
     }
 
     private void PlaceBomb()
     {
-        Instantiate(bombPrefab, bombSpawnPoint.position, Quaternion.identity);
+        if (currentBombs <= 0)
+        {
+            return;
+        }
+
+        Instantiate(
+            bombPrefab,
+            bombSpawnPoint.position,
+            Quaternion.identity
+        );
+
+        currentBombs--;
+
+        Debug.Log("Bombs remaining: " + currentBombs);
     }
 
+    [Range(1, 10)]
+    [SerializeField] private int maxBombs = 3;
 
+    private int currentBombs;
 
 
 
